@@ -1,0 +1,27 @@
+package:
+  name: constyle
+  version: "{{ MY_PACKAGE_VERSION }}"
+
+source:
+  path: ".."
+
+requirements:
+  build:
+    - python >=3.7
+    - pip
+    - poetry
+
+  run:
+    - python >=3.7
+
+build:
+  script: "{{ PYTHON }} -m pip install --no-deps --ignore-installed ."
+  noarch: python
+
+about:
+  home: https://github.com/abrahammurciano/python-constyle
+  license: GPLv3
+  summary: "A Python library to add style to your console."
+  description: "A Python library to add style to your console."
+  dev_url: https://github.com/abrahammurciano/python-constyle
+  doc_url: https://abrahammurciano.github.io/python-constyle/constyle

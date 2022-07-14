@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "constyle"
+version = "0.1.0"
+description = "A Python library to add style to your console."
+authors = ["Abraham Murciano <abrahammurciano@gmail.com>"]
+license = "GPLv3"
+readme = "README.md"
+repository = "https://github.com/abrahammurciano/python-constyle"
+documentation = "https://abrahammurciano.github.io/python-constyle/constyle"
+keywords = []
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+black = "*"
+pdoc3 = "*"
+toml = "*"
+types-toml = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
