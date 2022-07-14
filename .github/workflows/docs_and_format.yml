@@ -28,7 +28,7 @@ jobs:
         run: poetry run pdoc constyle --html -o docs/ -f -c show_source_code=False
       - name: Check for modified files
         id: git-check
-        run: echo ::set-output name=modified::$(if git status --porcelain | grep .; then echo "true"; else echo "false"; fi)
+        run: echo ::set-output name=modified::$(if git status --porcelain | grep . > dev/null; then echo "true"; else echo "false"; fi)
       - name: Create Pull Request
         if: steps.git-check.outputs.modified == 'true'
         uses: peter-evans/create-pull-request@v3
