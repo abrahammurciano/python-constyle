@@ -23,7 +23,7 @@ jobs:
       - name: Install
         run: poetry install
       - name: Format code
-        run: poetry run black constyle
+        run: poetry run black .
       - name: Generate Documentation
         run: poetry run pdoc constyle --html -o docs/ -f -c show_source_code=False
       - name: Check for modified files
