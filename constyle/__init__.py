@@ -52,7 +52,6 @@ class Attributes(Attribute, Enum):
     """Remove all formatting (same as NORMAL)"""
     NORMAL = 0
     """Remove all formatting (same as RESET)"""
-
     BLACK = 30
     """Black foreground text"""
     RED = 31
@@ -69,7 +68,6 @@ class Attributes(Attribute, Enum):
     """Cyan foreground text"""
     WHITE = 37
     """White foreground text"""
-
     ON_BLACK = 40
     """Black background text"""
     ON_RED = 41
@@ -86,7 +84,6 @@ class Attributes(Attribute, Enum):
     """Cyan background text"""
     ON_WHITE = 47
     """White background text"""
-
     GREY = 90
     """Grey foreground text (same as BRIGHT_BLACK)"""
     BRIGHT_BLACK = 90
@@ -105,7 +102,6 @@ class Attributes(Attribute, Enum):
     """Bright cyan foreground text"""
     BRIGHT_WHITE = 97
     """Bright white foreground text"""
-
     ON_GREY = 100
     """Grey background text (same as ON_BRIGHT_BLACK)"""
     ON_BRIGHT_BLACK = 100
@@ -124,12 +120,10 @@ class Attributes(Attribute, Enum):
     """Bright cyan background text"""
     ON_BRIGHT_WHITE = 107
     """Bright white background text"""
-
     DEFAULT_FOREGROUND = 39
     """Default foreground text colour"""
     DEFAULT_BACKGROUND = 49
     """Default background text colour"""
-
     BOLD = 1
     """Bold text"""
     NO_BOLD = 21
@@ -164,7 +158,6 @@ class Attributes(Attribute, Enum):
     """Unset conceal/hide (same as REVEAL and NO_HIDE)"""
     NO_HIDE = 28
     """Unset conceal/hide (same as REVEAL and NO_CONCEAL)"""
-
     UNDERLINE = 4
     """Underline text. Style extensions exist for Kitty, VTE, mintty and iTerm2."""
     NO_UNDERLINE = 24
@@ -193,7 +186,6 @@ class Attributes(Attribute, Enum):
     """Line on left of text. Rarely supported."""
     LEFT_DOUBLE_LINE = 63
     """Double line on left of text. Rarely supported."""
-
     IDEOGRAM_UNDERLINE = 60
     """Ideogram underline. Rarely supported."""
     IDEOGRAM_DOUBLE_UNDERLINE = 61
@@ -206,14 +198,12 @@ class Attributes(Attribute, Enum):
     """Ideogram stress mark. Rarely supported."""
     NO_IDEOGRAM = 65
     """Unset ideogram underline/overline/stress mark."""
-
     SUPERSCRIPT = 73
     """Superscript text. Implemented in mintty"""
     SUBSCRIPT = 74
     """Subscript text. Implemented in mintty"""
     NO_SUPERSCRIPT_SUBSCRIPT = 75
     """Unset superscript/subscript text"""
-
     PRIMARY_FONT = 10
     """Select primary font."""
     ALT_FONT_1 = 11
@@ -238,7 +228,6 @@ class Attributes(Attribute, Enum):
     """Fraktur font (same as GOTHIC). Rarely supported."""
     GOTHIC = 20
     """Gothic font (same as FRAKTUR). Rarely supported."""
-
     PROPORTIONAL_SPACING = 26
     """Proportional spacing. Not known to be used on terminals."""
     NO_PROPORTIONAL_SPACING = 50
