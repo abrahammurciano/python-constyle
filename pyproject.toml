@@ -28,6 +28,7 @@ black = "*"
 pdoc3 = "*"
 toml = "*"
 types-toml = "*"
+mypy = "*"
 
 [tool.poetry.scripts]
 constyle = "constyle.__main__:main"
