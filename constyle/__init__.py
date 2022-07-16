@@ -4,7 +4,9 @@
 
 
 from enum import Enum
-from typing import Any
+from functools import singledispatch
+import re
+from typing import Any, Union
 import importlib_metadata
 
 try:
@@ -26,6 +28,10 @@ class Attribute:
 
     Otherwise known as SGR (Select Graphic Rendition) parameters. More on that [here](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters).
 
+    Attribute objects are callable and will convert their input string into one forammted with this attribute.
+
+    Adding two attributes together will result in a `constyle.Style` object containing both attributes.
+
     Args:
         params: A string (or something that can be converted to a string) that contains the ANSI escape code. Typically this is a number, but for example for RGB colours it can be something like `"38;2;255;0;0"`.
     """
@@ -37,6 +43,14 @@ class Attribute:
     def ansi(self) -> str:
         """The ANSI escape code for this attribute."""
         return f"\033[{self.params}m"
+
+    def __call__(self, string: str) -> str:
+        return Style(self)(string)
+
+    def __add__(self, other: "Attribute") -> "Style":
+        if not isinstance(other, Attribute):
+            return NotImplemented
+        return Style(self, other)
 
 
 class Attributes(Attribute, Enum):
@@ -140,6 +154,8 @@ class Attributes(Attribute, Enum):
     """Neither italic nor blackletter text"""
     SLOW_BLINK = 5
     """Sets blinking to less than 150 times per minute. Rarely supported."""
+    BLINK = 5
+    """Same as SLOW_BLINK"""
     RAPID_BLINK = 6
     """Sets blinking to more than 150 times per minute. Rarely supported."""
     NO_BLINK = 25
@@ -241,16 +257,17 @@ class Attributes(Attribute, Enum):
 
 
 class Style:
-    """This class can be used to style a string.
+    """A collection of attributes which can be used to style a string.
+
+    You can add `Style`s together to create a style with all their attributes combined. You can also add a single `Attribute` to a `Style`.
 
     Args:
         *attrs: The attributes to apply.
-        enable_nesting: If true (the default), when applying attributes to a string all reset sequences in the string will be replaced with the attributes. This should facilitate nesting styles.
     """
 
-    def __init__(self, *attrs: Attribute, enable_nesting: bool = True) -> None:
-        self._attrs = attrs
-        self._enable_nesting = enable_nesting
+    def __init__(self, *attrs: Attribute) -> None:
+        self._attrs = tuple(attrs)
+        self._prefix = "".join(attr.ansi for attr in self._attrs)
 
     def __call__(self, string: str) -> str:
         """Apply the given attributes to the given string.
@@ -258,13 +275,23 @@ class Style:
         Args:
             string: The string to style.
         """
-        if not self._attrs:
-            return string  # No need to append the reset attribute if there are no attributes
+        return (
+            f"{self._prefix}{string}{Attributes.RESET.ansi}" if self._attrs else string
+        )
 
-        prefix = "".join(attr.ansi for attr in self._attrs)
-        reset = Attributes.RESET.ansi
-        string = string.replace(reset, prefix) if self._enable_nesting else string
-        return f"{prefix}{string}{reset}"
+    def __add__(self, obj: Union["Style", Attribute]) -> "Style":
+        """Add either another `Style` or an `Attribute` to a style, returning the new style.
+
+        Args:
+            obj: Either the style whose attributes to add, or a single attribute to add.
+
+        Returns:
+            Style: A new style object containing the attributes of the first operand and the second operand.
+        """
+        if not isinstance(obj, (Style, Attribute)):
+            return NotImplemented
+        other_attrs = obj._attrs if isinstance(obj, Style) else (obj,)
+        return Style(*self._attrs, *other_attrs)
 
 
 def style(string: str, *attrs: Attribute) -> str:
