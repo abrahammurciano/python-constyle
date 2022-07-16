@@ -29,11 +29,3 @@ def test_style_function(test_case: TEST_CASE_T):
 def test_style_class(test_case: TEST_CASE_T):
     attrs, prefix, suffix = test_case
     assert Style(*attrs)(TEST_STR) == prefix + TEST_STR + suffix
-
-
-def test_nesting(test_case: TEST_CASE_T):
-    attrs, prefix, suffix = test_case
-    assert (
-        style(f"prefix{style(TEST_STR, *attrs)}suffix", *attrs)
-        == prefix + "prefix" + prefix + TEST_STR + prefix + "suffix" + suffix
-    )
