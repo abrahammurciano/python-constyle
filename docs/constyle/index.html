@@ -32,8 +32,9 @@ A Python library to add style to your console …" />
 </code></pre>
 <pre><code class="language-sh">$ conda install -c abrahammurciano constyle
 </code></pre>
-<h2 id="documentation">Documentation</h2>
+<h2 id="links">Links</h2>
 <p>The full documentation is available <a href="https://abrahammurciano.github.io/python-constyle/constyle">here</a>.</p>
+<p>The source code is available <a href="https://github.com/abrahammurciano/python-constyle">here</a>.</p>
 <h2 id="usage">Usage</h2>
 <p>There are a couple of ways to use this library.</p>
 <h3 id="the-style-function">The <code><a title="constyle.style" href="#constyle.style">style()</a></code> function</h3>
@@ -42,28 +43,41 @@ A Python library to add style to your console …" />
 
 print(style('Hello World', Attributes.GREEN, Attributes.BOLD, Attributes.ON_BLUE))
 </code></pre>
+<h3 id="attribute-objects"><code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects</h3>
+<p><code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects are all callable, and calling them will apply their style to the given input string.</p>
+<pre><code class="language-py">from constyle import Attributes
+
+underline = Attributes.UNDERLINE
+print(underline(&quot;You wanna experience true level? Do you?&quot;))
+</code></pre>
 <h3 id="style-objects"><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects</h3>
-<p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style. <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
+<p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style with several attributes. <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
+<p>Adding together <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects will also create <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, as will adding <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code>s to existing <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects.</p>
 <pre><code class="language-py">from constyle import Style, Attributes
 
 warning = Style(Attributes.YELLOW, Attributes.BOLD)
+whisper = Attributes.GREY + Attributes.DIM + Attributes.SUPERSCRIPT
 
 print(warning('You shall not pass!'))
+print(whisper('Fly you fools'))
 </code></pre>
 <h3 id="attributes">Attributes</h3>
 <p>The <code><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></code> enum contains all the available ANSI attributes. You can read more about them <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters">here</a>.</p>
 <p>You'll find there is limited support for all the ANSI attributes among consoles.</p>
 <p>If you need more attributes than the ones provided in this enum, you can create your own by using the <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> class.</p>
 <h3 id="nesting">Nesting</h3>
-<p>You can nest styled strings. This will replace all "reset" ANSI escape codes in the inner string with those of the outer style.</p>
-<pre><code class="language-py">from constyle import Style, Attributes
+<p>Nesting strings is not supported. The inner string will cause the rest of the outer string to lose its formatting.</p>
+<blockquote>
+<p>NOTE: I would like to implement a fix for this in future, but I am uncertain if it is even possible, let alone feasible. If you have any suggestions, feel free to open an issue.</p>
+</blockquote>
+<pre><code class="language-py">from constyle import Attributes
 
-bold = Style(Attributes.BOLD)
-yellow = Style(Attributes.YELLOW)
-green = Style(Attributes.GREEN)
+bold = Attributes.BOLD
+yellow = Attributes.YELLOW
+green = Attributes.GREEN
 
 print(yellow(bold('This is bold and yellow')))
-print(green(f&quot;This is green. {yellow('This is yellow.')} This is still green&quot;))
+print(green(f&quot;This is green. {yellow('This is yellow.')} This is no longer green&quot;))
 </code></pre>
 <h3 id="rgb-and-8-bit-colours">RGB and 8-bit colours</h3>
 <p>You can create an attribute for whichever colour you want with the classes <code><a title="constyle.ForegroundRGB" href="#constyle.ForegroundRGB">ForegroundRGB</a></code>, <code><a title="constyle.BackgroundRGB" href="#constyle.BackgroundRGB">BackgroundRGB</a></code> and <code><a title="constyle.Foreground8Bit" href="#constyle.Foreground8Bit">Foreground8Bit</a></code> and <code><a title="constyle.Background8Bit" href="#constyle.Background8Bit">Background8Bit</a></code>. For example:</p>
@@ -107,6 +121,8 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dd>
 <div class="desc"><p>These are the ANSI escape codes used to set the style of text.</p>
 <p>Otherwise known as SGR (Select Graphic Rendition) parameters. More on that <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters">here</a>.</p>
+<p>Attribute objects are callable and will convert their input string into one forammted with this attribute.</p>
+<p>Adding two attributes together will result in a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> object containing both attributes.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>params</code></strong></dt>
@@ -180,6 +196,10 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dt id="constyle.Attributes.BLACK"><code class="name">var <span class="ident">BLACK</span></code></dt>
 <dd>
 <div class="desc"><p>Black foreground text</p></div>
+</dd>
+<dt id="constyle.Attributes.BLINK"><code class="name">var <span class="ident">BLINK</span></code></dt>
+<dd>
+<div class="desc"><p>Same as SLOW_BLINK</p></div>
 </dd>
 <dt id="constyle.Attributes.BLUE"><code class="name">var <span class="ident">BLUE</span></code></dt>
 <dd>
@@ -661,16 +681,15 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 </dd>
 <dt id="constyle.Style"><code class="flex name class">
 <span>class <span class="ident">Style</span></span>
-<span>(</span><span>*attrs: <a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a>, enable_nesting: bool = True)</span>
+<span>(</span><span>*attrs: <a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This class can be used to style a string.</p>
+<div class="desc"><p>A collection of attributes which can be used to style a string.</p>
+<p>You can add <code><a title="constyle.Style" href="#constyle.Style">Style</a></code>s together to create a style with all their attributes combined. You can also add a single <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> to a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>*attrs</code></strong></dt>
 <dd>The attributes to apply.</dd>
-<dt><strong><code>enable_nesting</code></strong></dt>
-<dd>If true (the default), when applying attributes to a string all reset sequences in the string will be replaced with the attributes. This should facilitate nesting styles.</dd>
 </dl></div>
 </dd>
 </dl>
@@ -682,9 +701,10 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <ul>
 <li><a href="#constyle">constyle</a><ul>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#documentation">Documentation</a></li>
+<li><a href="#links">Links</a></li>
 <li><a href="#usage">Usage</a><ul>
 <li><a href="#the-style-function">The style function</a></li>
+<li><a href="#attribute-objects">Attribute objects</a></li>
 <li><a href="#style-objects">Style objects</a></li>
 <li><a href="#attributes">Attributes</a></li>
 <li><a href="#nesting">Nesting</a></li>
@@ -723,6 +743,7 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <li><code><a title="constyle.Attributes.ALT_FONT_8" href="#constyle.Attributes.ALT_FONT_8">ALT_FONT_8</a></code></li>
 <li><code><a title="constyle.Attributes.ALT_FONT_9" href="#constyle.Attributes.ALT_FONT_9">ALT_FONT_9</a></code></li>
 <li><code><a title="constyle.Attributes.BLACK" href="#constyle.Attributes.BLACK">BLACK</a></code></li>
+<li><code><a title="constyle.Attributes.BLINK" href="#constyle.Attributes.BLINK">BLINK</a></code></li>
 <li><code><a title="constyle.Attributes.BLUE" href="#constyle.Attributes.BLUE">BLUE</a></code></li>
 <li><code><a title="constyle.Attributes.BOLD" href="#constyle.Attributes.BOLD">BOLD</a></code></li>
 <li><code><a title="constyle.Attributes.BRIGHT_BLACK" href="#constyle.Attributes.BRIGHT_BLACK">BRIGHT_BLACK</a></code></li>
