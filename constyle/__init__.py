@@ -6,7 +6,7 @@
 from enum import Enum
 from functools import singledispatch
 import re
-from typing import Any, Union
+from typing import Any, Union, Iterator
 import importlib_metadata
 
 try:
@@ -43,6 +43,9 @@ class Attribute:
     def ansi(self) -> str:
         """The ANSI escape code for this attribute."""
         return f"\033[{self.params}m"
+
+    def __str__(self) -> str:
+        return self.ansi
 
     def __call__(self, string: str) -> str:
         return Style(self)(string)
@@ -292,6 +295,9 @@ class Style:
             return NotImplemented
         other_attrs = obj._attrs if isinstance(obj, Style) else (obj,)
         return Style(*self._attrs, *other_attrs)
+
+    def __iter__(self) -> Iterator[Attribute]:
+        return iter(self._attrs)
 
 
 def style(string: str, *attrs: Attribute) -> str:
