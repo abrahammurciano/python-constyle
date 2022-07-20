@@ -258,6 +258,9 @@ class Attributes(Attribute, Enum):
     NO_FRAMED_ENCIRCLED = 54
     """Unset framed/encircled text"""
 
+    def __repr__(self) -> str:
+        return self.name
+
 
 class Style:
     """A collection of attributes which can be used to style a string.
@@ -298,6 +301,12 @@ class Style:
 
     def __iter__(self) -> Iterator[Attribute]:
         return iter(self._attrs)
+
+    def __str__(self) -> str:
+        return self._prefix
+
+    def __repr__(self) -> str:
+        return f"Style({', '.join(repr(attr) for attr in self._attrs)})"
 
 
 def style(string: str, *attrs: Attribute) -> str:
