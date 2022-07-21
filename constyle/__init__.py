@@ -4,6 +4,7 @@
 
 
 from enum import Enum
+from abc import ABC, abstractmethod
 from functools import singledispatch
 import re
 from typing import Any, Union, Iterator
@@ -23,7 +24,37 @@ except importlib_metadata.PackageNotFoundError:
     )
 
 
-class Attribute:
+class Stylist(ABC):
+    """A common interface for anything which can apply a style to a string, e.g. `Attribute` and `Style`.
+
+    Classes which implement it fulfill the following contract:
+    - Calling an intance with a string as the first argument shall return a string differing only in the ANSI codes it contains or does not.
+    - Converting an instance to a string will result in a string of pure ANSI codes.
+    - `.end` gives something which when converted to a string, is the ANSI codes to reset the style.
+    """
+
+    @abstractmethod
+    def __call__(self, string: str) -> str:
+        """Apply the given attributes to the given string.
+
+        Args:
+            string: The string to apply the style to.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def __str__(self) -> str:
+        """The ANSI escape codes to apply the style."""
+        raise NotImplementedError()
+
+    @property
+    @abstractmethod
+    def end(self) -> Any:
+        """When converted to a string, these are the ANSI codes to reset the style being applied."""
+        raise NotImplementedError()
+
+
+class Attribute(Stylist):
     """These are the ANSI escape codes used to set the style of text.
 
     Otherwise known as SGR (Select Graphic Rendition) parameters. More on that [here](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters).
@@ -33,16 +64,22 @@ class Attribute:
     Adding two attributes together will result in a `constyle.Style` object containing both attributes.
 
     Args:
-        params: A string (or something that can be converted to a string) that contains the ANSI escape code. Typically this is a number, but for example for RGB colours it can be something like `"38;2;255;0;0"`.
+        params: A string (or something that can be converted to a string) that contains the ANSI escape code parameter. Typically this is a number, but for example for RGB colours it can be something like `"38;2;255;0;0"`.
+        end_params: The ANSI escape code parameter to reset this `Attribute`. By default it's 0 (which resets all attributes). If the attribute is of a resetting nature (e.g. `Attributes.DEFAULT_FOREGROUND or Attributes.NO_BOLD), then `end_params` should be `None`.
     """
 
-    def __init__(self, params: Any):
+    def __init__(self, params: Any, end_params: Any = 0):
         self.params = params
+        self._end_params = end_params
 
     @property
     def ansi(self) -> str:
         """The ANSI escape code for this attribute."""
         return f"\033[{self.params}m"
+
+    @property
+    def end(self) -> str:
+        return Attribute(self._end_params).ansi
 
     def __str__(self) -> str:
         return self.ansi
@@ -65,137 +102,143 @@ class Attributes(Attribute, Enum):
     There are also several common aliases for the same attribute (such as RESET and NORMAL).
     """
 
-    RESET = 0
+    RESET = 0, None
     """Remove all formatting (same as NORMAL)"""
-    NORMAL = 0
+    NORMAL = 0, None
     """Remove all formatting (same as RESET)"""
-    BLACK = 30
+    BLACK = 30, 39
     """Black foreground text"""
-    RED = 31
+    RED = 31, 39
     """Red foreground text"""
-    GREEN = 32
+    GREEN = 32, 39
     """Green foreground text"""
-    YELLOW = 33
+    YELLOW = 33, 39
     """Yellow foreground text"""
-    BLUE = 34
+    BLUE = 34, 39
     """Blue foreground text"""
-    MAGENTA = 35
+    MAGENTA = 35, 39
     """Magenta foreground text"""
-    CYAN = 36
+    CYAN = 36, 39
     """Cyan foreground text"""
-    WHITE = 37
+    WHITE = 37, 39
     """White foreground text"""
-    ON_BLACK = 40
+    ON_BLACK = 40, 49
     """Black background text"""
-    ON_RED = 41
+    ON_RED = 41, 49
     """Red background text"""
-    ON_GREEN = 42
+    ON_GREEN = 42, 49
     """Green background text"""
-    ON_YELLOW = 43
+    ON_YELLOW = 43, 49
     """Yellow background text"""
-    ON_BLUE = 44
+    ON_BLUE = 44, 49
     """Blue background text"""
-    ON_MAGENTA = 45
+    ON_MAGENTA = 45, 49
     """Magenta background text"""
-    ON_CYAN = 46
+    ON_CYAN = 46, 49
     """Cyan background text"""
-    ON_WHITE = 47
+    ON_WHITE = 47, 49
     """White background text"""
-    GREY = 90
+    GREY = 90, 39
     """Grey foreground text (same as BRIGHT_BLACK)"""
-    BRIGHT_BLACK = 90
+    BRIGHT_BLACK = 90, 39
     """Grey foreground text"""
-    BRIGHT_RED = 91
+    BRIGHT_RED = 91, 39
     """Bright red foreground text"""
-    BRIGHT_GREEN = 92
+    BRIGHT_GREEN = 92, 39
     """Bright green foreground text"""
-    BRIGHT_YELLOW = 93
+    BRIGHT_YELLOW = 93, 39
     """Bright yellow foreground text"""
-    BRIGHT_BLUE = 94
+    BRIGHT_BLUE = 94, 39
     """Bright blue foreground text"""
-    BRIGHT_MAGENTA = 95
+    BRIGHT_MAGENTA = 95, 39
     """Bright magenta foreground text"""
-    BRIGHT_CYAN = 96
+    BRIGHT_CYAN = 96, 39
     """Bright cyan foreground text"""
-    BRIGHT_WHITE = 97
+    BRIGHT_WHITE = 97, 39
     """Bright white foreground text"""
-    ON_GREY = 100
+    ON_GREY = 100, 49
     """Grey background text (same as ON_BRIGHT_BLACK)"""
-    ON_BRIGHT_BLACK = 100
+    ON_BRIGHT_BLACK = 100, 49
     """Grey background text"""
-    ON_BRIGHT_RED = 101
+    ON_BRIGHT_RED = 101, 49
     """Bright red background text"""
-    ON_BRIGHT_GREEN = 102
+    ON_BRIGHT_GREEN = 102, 49
     """Bright green background text"""
-    ON_BRIGHT_YELLOW = 103
+    ON_BRIGHT_YELLOW = 103, 49
     """Bright yellow background text"""
-    ON_BRIGHT_BLUE = 104
+    ON_BRIGHT_BLUE = 104, 49
     """Bright blue background text"""
-    ON_BRIGHT_MAGENTA = 105
+    ON_BRIGHT_MAGENTA = 105, 49
     """Bright magenta background text"""
-    ON_BRIGHT_CYAN = 106
+    ON_BRIGHT_CYAN = 106, 49
     """Bright cyan background text"""
-    ON_BRIGHT_WHITE = 107
+    ON_BRIGHT_WHITE = 107, 49
     """Bright white background text"""
-    DEFAULT_FOREGROUND = 39
+    DEFAULT_FOREGROUND = 39, None
     """Default foreground text colour"""
-    DEFAULT_BACKGROUND = 49
+    NO_COLOUR = 39, None
+    """Default foreground text colour"""
+    NO_FOREGROUND = 39, None
+    """Default foreground text colour"""
+    DEFAULT_BACKGROUND = 49, None
     """Default background text colour"""
-    BOLD = 1
+    NO_BACKGROUND = 49, None
+    """Default background text colour"""
+    BOLD = 1, 21
     """Bold text"""
-    NO_BOLD = 21
+    NO_BOLD = 21, None
     """Not bold text"""
-    FAINT = 2
+    FAINT = 2, 21
     """Faint text (same as DIM). May be implemented as a lighter colour or as a thinner font."""
-    DIM = 2
+    DIM = 2, 21
     """Dim text (same as FAINT). May be implemented as a lighter colour or as a thinner font."""
-    NO_BOLD_FEINT = 22
+    NO_BOLD_FEINT = 22, None
     """Neither bold nor faint text"""
-    ITALIC = 3
+    ITALIC = 3, 23
     """Italic text. Not widely supported. Sometimes treated as inverse or blink."""
-    NO_ITALIC_BLACKLETTER = 23
+    NO_ITALIC_BLACKLETTER = 23, None
     """Neither italic nor blackletter text"""
-    SLOW_BLINK = 5
+    SLOW_BLINK = 5, 25
     """Sets blinking to less than 150 times per minute. Rarely supported."""
-    BLINK = 5
+    BLINK = 5, 25
     """Same as SLOW_BLINK"""
-    RAPID_BLINK = 6
+    RAPID_BLINK = 6, 25
     """Sets blinking to more than 150 times per minute. Rarely supported."""
-    NO_BLINK = 25
+    NO_BLINK = 25, None
     """Sets blinking to off."""
-    INVERT = 7
+    INVERT = 7, 27
     """Swap foreground and background colors; inconsistent emulation"""
-    NO_INVERT = 27
+    NO_INVERT = 27, None
     """Unset invert"""
-    CONCEAL = 8
+    CONCEAL = 8, 28
     """Invisible text (same as HIDE). Not widely supported."""
-    HIDE = 8
+    HIDE = 8, 28
     """Invisible text (same as CONCEAL). Not widely supported."""
-    REVEAL = 28
+    REVEAL = 28, None
     """Unset conceal/hide (same as NO_CONCEAL and NO_HIDE)"""
-    NO_CONCEAL = 28
+    NO_CONCEAL = 28, None
     """Unset conceal/hide (same as REVEAL and NO_HIDE)"""
-    NO_HIDE = 28
+    NO_HIDE = 28, None
     """Unset conceal/hide (same as REVEAL and NO_CONCEAL)"""
-    UNDERLINE = 4
+    UNDERLINE = 4, 24
     """Underline text. Style extensions exist for Kitty, VTE, mintty and iTerm2."""
-    NO_UNDERLINE = 24
+    NO_UNDERLINE = 24, None
     """Unset underline"""
-    DOUBE_UNDERLINE = 21
+    DOUBE_UNDERLINE = 21, 24
     """Double underline. Rarely supported."""
-    DEFAULT_UNDERLINE_COLOUR = 59
+    DEFAULT_UNDERLINE_COLOUR = 59, None
     """Set the underline colour to the default. Not in standard; implemented in Kitty, VTE, mintty, and iTerm2."""
-    OVERLINE = 53
+    OVERLINE = 53, 55
     """Overline text"""
-    NO_OVERLINE = 55
+    NO_OVERLINE = 55, None
     """Unset overline"""
-    CROSSED = 9
+    CROSSED = 9, 29
     """Crossed out text (same as STRIKE). Characters legible but marked as if for deletion."""
-    NO_CROSSED = 29
+    NO_CROSSED = 29, None
     """Unset crossed out text (same as NO_STRIKE)"""
-    STRIKE = 9
+    STRIKE = 9, 29
     """Crossed out text (same as CROSSED). Characters legible but marked as if for deletion."""
-    NO_STRIKE = 29
+    NO_STRIKE = 29, None
     """Unset crossed out text (same as NO_CROSSED)"""
     RIGHT_LINE = 60
     """Line on right of text. Rarely supported."""
@@ -205,64 +248,64 @@ class Attributes(Attribute, Enum):
     """Line on left of text. Rarely supported."""
     LEFT_DOUBLE_LINE = 63
     """Double line on left of text. Rarely supported."""
-    IDEOGRAM_UNDERLINE = 60
+    IDEOGRAM_UNDERLINE = 60, 65
     """Ideogram underline. Rarely supported."""
-    IDEOGRAM_DOUBLE_UNDERLINE = 61
+    IDEOGRAM_DOUBLE_UNDERLINE = 61, 65
     """Ideogram double underline. Rarely supported."""
-    IDEOGRAM_OVERLINE = 62
+    IDEOGRAM_OVERLINE = 62, 65
     """Ideogram overline. Rarely supported."""
-    IDEOGRAM_DOUBLE_OVERLINE = 63
+    IDEOGRAM_DOUBLE_OVERLINE = 63, 65
     """Ideogram double overline. Rarely supported."""
-    IDEOGRAM_STRESS_MARK = 64
+    IDEOGRAM_STRESS_MARK = 64, 65
     """Ideogram stress mark. Rarely supported."""
-    NO_IDEOGRAM = 65
+    NO_IDEOGRAM = 65, None
     """Unset ideogram underline/overline/stress mark."""
-    SUPERSCRIPT = 73
+    SUPERSCRIPT = 73, 75
     """Superscript text. Implemented in mintty"""
-    SUBSCRIPT = 74
+    SUBSCRIPT = 74, 75
     """Subscript text. Implemented in mintty"""
-    NO_SUPERSCRIPT_SUBSCRIPT = 75
+    NO_SUPERSCRIPT_SUBSCRIPT = 75, None
     """Unset superscript/subscript text"""
-    PRIMARY_FONT = 10
+    PRIMARY_FONT = 10, None
     """Select primary font."""
-    ALT_FONT_1 = 11
+    ALT_FONT_1 = 11, 10
     """Select alternate font 1. Rarely supported."""
-    ALT_FONT_2 = 12
+    ALT_FONT_2 = 12, 10
     """Select alternate font 2. Rarely supported."""
-    ALT_FONT_3 = 13
+    ALT_FONT_3 = 13, 10
     """Select alternate font 3. Rarely supported."""
-    ALT_FONT_4 = 14
+    ALT_FONT_4 = 14, 10
     """Select alternate font 4. Rarely supported."""
-    ALT_FONT_5 = 15
+    ALT_FONT_5 = 15, 10
     """Select alternate font 5. Rarely supported."""
-    ALT_FONT_6 = 16
+    ALT_FONT_6 = 16, 10
     """Select alternate font 6. Rarely supported."""
-    ALT_FONT_7 = 17
+    ALT_FONT_7 = 17, 10
     """Select alternate font 7. Rarely supported."""
-    ALT_FONT_8 = 18
+    ALT_FONT_8 = 18, 10
     """Select alternate font 8. Rarely supported."""
-    ALT_FONT_9 = 19
+    ALT_FONT_9 = 19, 10
     """Select alternate font 9. Rarely supported."""
-    FRAKTUR = 20
+    FRAKTUR = 20, 10
     """Fraktur font (same as GOTHIC). Rarely supported."""
-    GOTHIC = 20
+    GOTHIC = 20, 10
     """Gothic font (same as FRAKTUR). Rarely supported."""
-    PROPORTIONAL_SPACING = 26
+    PROPORTIONAL_SPACING = 26, 50
     """Proportional spacing. Not known to be used on terminals."""
-    NO_PROPORTIONAL_SPACING = 50
+    NO_PROPORTIONAL_SPACING = 50, None
     """Unset proportional spacing"""
-    FRAMED = 51
+    FRAMED = 51, 54
     """Framed text. Implemented as "emoji variation selector" in mintty."""
-    ENCIRCLED = 52
+    ENCIRCLED = 52, 54
     """Encircled text. Implemented as "emoji variation selector" in mintty."""
-    NO_FRAMED_ENCIRCLED = 54
+    NO_FRAMED_ENCIRCLED = 54, None
     """Unset framed/encircled text"""
 
     def __repr__(self) -> str:
         return self.name
 
 
-class Style:
+class Style(Stylist):
     """A collection of attributes which can be used to style a string.
 
     You can add `Style`s together to create a style with all their attributes combined. You can also add a single `Attribute` to a `Style`.
@@ -276,14 +319,13 @@ class Style:
         self._prefix = "".join(attr.ansi for attr in self._attrs)
 
     def __call__(self, string: str) -> str:
-        """Apply the given attributes to the given string.
-
-        Args:
-            string: The string to style.
-        """
         return (
             f"{self._prefix}{string}{Attributes.RESET.ansi}" if self._attrs else string
-        )
+        ) # TODO: Insert correct suffix
+
+    @property
+    def end(self) -> "Style":
+        pass # TODO: Implement
 
     def __add__(self, obj: Union["Style", Attribute]) -> "Style":
         """Add either another `Style` or an `Attribute` to a style, returning the new style.
