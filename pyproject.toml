@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "constyle"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Python library to add style to your console."
 authors = ["Abraham Murciano <abrahammurciano@gmail.com>"]
 license = "GPLv3"
@@ -20,7 +20,7 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-importlib-metadata = "^4.12.0"
+importlib-metadata = "^4.11.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
