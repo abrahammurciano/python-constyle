@@ -546,7 +546,18 @@ print(style('This is pink', RGB(255, 192, 203)))
 </code></dt>
 <dd>
 <div class="desc"><p>A collection of attributes defining the style of a string.</p>
+<p>You can call <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to apply the style to a string.</p>
+<pre><code class="language-py">&gt;&gt;&gt; warning = Style(Attributes.BOLD, Attributes.YELLOW, Attributes.ITALIC)
+&gt;&gt;&gt; print(warning(&quot;This is a warning!&quot;))
+</code></pre>
 <p>You can add <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects together to create a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> with all their attributes combined.</p>
+<pre><code class="language-py">&gt;&gt;&gt; warning = Style(Attributes.YELLOW, Attributes.ITALIC)
+&gt;&gt;&gt; error = warning + Attributes.BOLD + Attributes.ON_RED
+&gt;&gt;&gt; print(error(&quot;This is an error!&quot;))
+</code></pre>
+<p>You can also convert a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> object to a string to get the ANSI escape sequence for the style.</p>
+<pre><code class="language-py">&gt;&gt;&gt; print(f&quot;{Attributes.YELLOW + Attributes.ITALIC + Attributes.BOLD}This is a warning!{Attributes.RESET}&quot;)
+</code></pre>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>*attrs</code></strong></dt>
