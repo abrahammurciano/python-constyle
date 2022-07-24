@@ -1,9 +1,9 @@
 import argparse
 from typing import Iterable, List, Optional, Tuple
-from constyle import Attribute, Attributes, style
+from . import Attributes, style, Style
 
 
-def parse_args(argv: Optional[List[str]]) -> Tuple[str, Iterable[Attribute]]:
+def parse_args(argv: Optional[List[str]]) -> Tuple[str, Iterable[Style]]:
     parser = argparse.ArgumentParser(
         description="Print a string to your console WITH STYLE!"
     )
