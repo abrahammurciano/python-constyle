@@ -1,7 +1,7 @@
 # constyle
 A Python library to add style to your console.
 
-The name of the library comes from merging the words **CONSoLE** and **STYLE**.
+The name of the library comes from merging the words **CONSoLE** and **STYLE**. Also "con" means "with" in Spanish.
 
 ## Installation
 
@@ -19,6 +19,8 @@ The full documentation is available [here](https://abrahammurciano.github.io/pyt
 
 The source code is available [here](https://github.com/abrahammurciano/python-constyle).
 
+Join the support Discord server [here](https://discord.gg/nUmsrhNDSs).
+
 ## Usage
 
 There are a couple of ways to use this library.
@@ -33,50 +35,52 @@ from constyle import style, Attributes
 print(style('Hello World', Attributes.GREEN, Attributes.BOLD, Attributes.ON_BLUE))
 ```
 
-### `Attribute` objects
-
-`Attribute` objects are all callable, and calling them will apply their style to the given input string.
-
-```py
-from constyle import Attributes
-
-underline = Attributes.UNDERLINE
-print(underline("You wanna experience true level? Do you?"))
-```
-
 ### `Style` objects
 
-You can also use `Style` objects to create a reusable style with several attributes. `Style` objects are callable and take a string as input and return a styled string.
+You can also use `Style` objects to create a reusable style with any number of attributes.
 
-Adding together `Attribute` objects will also create `Style` objects, as will adding `Attribute`s to existing `Style` objects.
+#### Calling a `Style` object
+
+`Style` objects are callable and take a string as input and return a styled string.
 
 ```py
-from constyle import Style, Attributes
-
 warning = Style(Attributes.YELLOW, Attributes.BOLD)
-whisper = Attributes.GREY + Attributes.DIM + Attributes.SUPERSCRIPT
-
 print(warning('You shall not pass!'))
+```
+
+#### Adding `Style` objects
+
+Adding together `Style` objects will also create `Style` objects.
+
+```py
+whisper = Attributes.GREY + Attributes.DIM + Attributes.SUPERSCRIPT
 print(whisper('Fly you fools'))
+```
+
+#### Converting `Style` objects to strings
+
+`Style` objects can be converted to strings to obtain the ANSI escape sequence for that style.
+
+```py
+warning = Style(Attributes.YELLOW, Attributes.BOLD)
+print(f"{warning}You shall not pass!{Attributes.RESET}")
 ```
 
 ### Attributes
 
 The `Attributes` enum contains all the available ANSI attributes. You can read more about them [here](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters).
 
-You'll find there is limited support for all the ANSI attributes among consoles.
+`Attributes` are also `Style` objects, and as such, as demonstrated above, they too can be called to style a string, added together and to other `Style` objects, and converted to strings to obtain their ANSI sequence.
 
-If you need more attributes than the ones provided in this enum, you can create your own by using the `Attribute` class.
+You'll find there is limited support for all the ANSI attributes among some consoles.
+
+If you find more attributes that aren't provided in this enum, you can create your own by constructing a `Style` with an integer.
 
 ### Nesting
 
-Nesting strings is not supported. The inner string will cause the rest of the outer string to lose its formatting.
-
-> NOTE: I would like to implement a fix for this in future, but I am uncertain if it is even possible, let alone feasible. If you have any suggestions, feel free to open an issue.
+In order to nest styles, you can use the `end=` keyword argument of the `style` function or the `Style` class. Usually when applying a style, the `RESET` attribute is appended to the end. This can be undesirable when nesting (see the example below).
 
 ```py
-from constyle import Attributes
-
 bold = Attributes.BOLD
 yellow = Attributes.YELLOW
 green = Attributes.GREEN
@@ -85,15 +89,30 @@ print(yellow(bold('This is bold and yellow')))
 print(green(f"This is green. {yellow('This is yellow.')} This is no longer green"))
 ```
 
-### RGB and 8-bit colours
-
-You can create an attribute for whichever colour you want with the classes `ForegroundRGB`, `BackgroundRGB` and `Foreground8Bit` and `Background8Bit`. For example:
+In order to achieve the desired result in the above example, you would have to use the `end=` keyword argument of the `style` function. You can pass any `Style` to `end`.
 
 ```py
-from constyle import ForegroundRGB, style
-
-print(style("This is a pink string", ForegroundRGB(255, 128, 255)))
+print(green(f"This is green. {bold('This is green and bold.', end=Attributes.NO_BOLD)} This is still green but not bold anymore"))
+print(green(f"This is green. {yellow('This is yellow.', end=green)} This is now green again"))
 ```
+
+### Custom colours
+
+The `constyle.custom_colours` module contains a few classes that can be used to create custom colours.
+
+#### RGB colours
+
+You can create a `Style` for a custom RGB colour by using the `RGB` class. This is not well supported by all consoles.
+
+```py
+from constyle.custom_colours import RGB
+
+print(style('This is pink', RGB(255, 192, 203)))
+```
+
+#### 8-bit colours
+
+Some consoles support 8-bit colours. You can create a `Style` for an 8-bit colour by using the `EightBit` class, passing a single integer to it, or you can use the `EightBitRGB` class to create an 8-bit colour style as close to the RGB values as possible.
 
 ### The command line interface
 

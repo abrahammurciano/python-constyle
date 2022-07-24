@@ -43,8 +43,8 @@ A Python library to add style to your console …" />
 
 print(style('Hello World', Attributes.GREEN, Attributes.BOLD, Attributes.ON_BLUE))
 </code></pre>
-<h3 id="attribute-objects"><code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects</h3>
-<p><code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects are all callable, and calling them will apply their style to the given input string.</p>
+<h3 id="attribute-objects"><code>Attribute</code> objects</h3>
+<p><code>Attribute</code> objects are all callable, and calling them will apply their style to the given input string.</p>
 <pre><code class="language-py">from constyle import Attributes
 
 underline = Attributes.UNDERLINE
@@ -52,7 +52,7 @@ print(underline(&quot;You wanna experience true level? Do you?&quot;))
 </code></pre>
 <h3 id="style-objects"><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects</h3>
 <p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style with several attributes. <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
-<p>Adding together <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> objects will also create <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, as will adding <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code>s to existing <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects.</p>
+<p>Adding together <code>Attribute</code> objects will also create <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, as will adding <code>Attribute</code>s to existing <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects.</p>
 <pre><code class="language-py">from constyle import Style, Attributes
 
 warning = Style(Attributes.YELLOW, Attributes.BOLD)
@@ -64,7 +64,7 @@ print(whisper('Fly you fools'))
 <h3 id="attributes">Attributes</h3>
 <p>The <code><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></code> enum contains all the available ANSI attributes. You can read more about them <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters">here</a>.</p>
 <p>You'll find there is limited support for all the ANSI attributes among consoles.</p>
-<p>If you need more attributes than the ones provided in this enum, you can create your own by using the <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> class.</p>
+<p>If you need more attributes than the ones provided in this enum, you can create your own by using the <code>Attribute</code> class.</p>
 <h3 id="nesting">Nesting</h3>
 <p>Nesting strings is not supported. The inner string will cause the rest of the outer string to lose its formatting.</p>
 <blockquote>
@@ -80,7 +80,7 @@ print(yellow(bold('This is bold and yellow')))
 print(green(f&quot;This is green. {yellow('This is yellow.')} This is no longer green&quot;))
 </code></pre>
 <h3 id="rgb-and-8-bit-colours">RGB and 8-bit colours</h3>
-<p>You can create an attribute for whichever colour you want with the classes <code><a title="constyle.ForegroundRGB" href="#constyle.ForegroundRGB">ForegroundRGB</a></code>, <code><a title="constyle.BackgroundRGB" href="#constyle.BackgroundRGB">BackgroundRGB</a></code> and <code><a title="constyle.Foreground8Bit" href="#constyle.Foreground8Bit">Foreground8Bit</a></code> and <code><a title="constyle.Background8Bit" href="#constyle.Background8Bit">Background8Bit</a></code>. For example:</p>
+<p>You can create an attribute for whichever colour you want with the classes <code>ForegroundRGB</code>, <code>BackgroundRGB</code> and <code>Foreground8Bit</code> and <code>Background8Bit</code>. For example:</p>
 <pre><code class="language-py">from constyle import ForegroundRGB, style
 
 print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
@@ -90,6 +90,13 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <p>Use <code>constyle --help</code> to see how to use it.</p>
 </section>
 <section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="constyle.custom_colours" href="custom_colours.html">constyle.custom_colours</a></code></dt>
+<dd>
+<div class="desc"><p>This module contains classes to create foreground and background attributes which apply custom colours …</p></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -97,7 +104,7 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="constyle.style"><code class="name flex">
-<span>def <span class="ident">style</span></span>(<span>string: str, *attrs: <a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a>) ‑> str</span>
+<span>def <span class="ident">style</span></span>(<span>string: str, *attrs: <a title="constyle.Style" href="#constyle.Style">Style</a>, end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Apply the given attributes to the given string.</p>
@@ -106,7 +113,9 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dt><strong><code>string</code></strong></dt>
 <dd>The string to style.</dd>
 <dt><strong><code>*attrs</code></strong></dt>
-<dd>The attributes to apply.</dd>
+<dd>The attributes/styles to apply.</dd>
+<dt><strong><code>end</code></strong></dt>
+<dd>The style to apply after the string. If None (the default) it will reset all attributes at the end.</dd>
 </dl></div>
 </dd>
 </dl>
@@ -114,45 +123,17 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="constyle.Attribute"><code class="flex name class">
-<span>class <span class="ident">Attribute</span></span>
-<span>(</span><span>params: Any)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>These are the ANSI escape codes used to set the style of text.</p>
-<p>Otherwise known as SGR (Select Graphic Rendition) parameters. More on that <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters">here</a>.</p>
-<p>Attribute objects are callable and will convert their input string into one forammted with this attribute.</p>
-<p>Adding two attributes together will result in a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> object containing both attributes.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>params</code></strong></dt>
-<dd>A string (or something that can be converted to a string) that contains the ANSI escape code. Typically this is a number, but for example for RGB colours it can be something like <code>"38;2;255;0;0"</code>.</dd>
-</dl></div>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></li>
-<li>constyle._Base8Bit</li>
-<li>constyle._BaseRGB</li>
-</ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="constyle.Attribute.ansi"><code class="name">var <span class="ident">ansi</span> : str</code></dt>
-<dd>
-<div class="desc"><p>The ANSI escape code for this attribute.</p></div>
-</dd>
-</dl>
-</dd>
 <dt id="constyle.Attributes"><code class="flex name class">
 <span>class <span class="ident">Attributes</span></span>
-<span>(</span><span>params: Any)</span>
+<span>(</span><span>*attrs: Union[<a title="constyle.Style" href="#constyle.Style">Style</a>, int], end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This enum contains almost all ANSI escape codes known to man.</p>
+<div class="desc"><p>This enum contains almost all ANSI sequences known to man.</p>
 <p>Due to inconsistencies across implementations you may find that there are sometimes conflicting attributes with the same param.</p>
 <p>There are also several common aliases for the same attribute (such as RESET and NORMAL).</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></li>
+<li>constyle._style.Style</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>
@@ -349,6 +330,10 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dd>
 <div class="desc"><p>Remove all formatting (same as RESET)</p></div>
 </dd>
+<dt id="constyle.Attributes.NO_BACKGROUND"><code class="name">var <span class="ident">NO_BACKGROUND</span></code></dt>
+<dd>
+<div class="desc"><p>Default background text colour</p></div>
+</dd>
 <dt id="constyle.Attributes.NO_BLINK"><code class="name">var <span class="ident">NO_BLINK</span></code></dt>
 <dd>
 <div class="desc"><p>Sets blinking to off.</p></div>
@@ -361,6 +346,10 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dd>
 <div class="desc"><p>Neither bold nor faint text</p></div>
 </dd>
+<dt id="constyle.Attributes.NO_COLOUR"><code class="name">var <span class="ident">NO_COLOUR</span></code></dt>
+<dd>
+<div class="desc"><p>Default foreground text colour</p></div>
+</dd>
 <dt id="constyle.Attributes.NO_CONCEAL"><code class="name">var <span class="ident">NO_CONCEAL</span></code></dt>
 <dd>
 <div class="desc"><p>Unset conceal/hide (same as REVEAL and NO_HIDE)</p></div>
@@ -368,6 +357,10 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <dt id="constyle.Attributes.NO_CROSSED"><code class="name">var <span class="ident">NO_CROSSED</span></code></dt>
 <dd>
 <div class="desc"><p>Unset crossed out text (same as NO_STRIKE)</p></div>
+</dd>
+<dt id="constyle.Attributes.NO_FOREGROUND"><code class="name">var <span class="ident">NO_FOREGROUND</span></code></dt>
+<dd>
+<div class="desc"><p>Default foreground text colour</p></div>
 </dd>
 <dt id="constyle.Attributes.NO_FRAMED_ENCIRCLED"><code class="name">var <span class="ident">NO_FRAMED_ENCIRCLED</span></code></dt>
 <dd>
@@ -542,155 +535,27 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <div class="desc"><p>Yellow foreground text</p></div>
 </dd>
 </dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></b></code>:
-<ul class="hlist">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="constyle.Background8Bit"><code class="flex name class">
-<span>class <span class="ident">Background8Bit</span></span>
-<span>(</span><span>value: int)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This class allows you to make attributes for custom background colours using 8-bit values.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>value</code></strong></dt>
-<dd>The 8-bit value of the colour (0 to 255).</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>If the 8-bit value is not between 0 and 255.</dd>
-</dl></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>constyle._Base8Bit</li>
-<li><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></b></code>:
-<ul class="hlist">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="constyle.BackgroundRGB"><code class="flex name class">
-<span>class <span class="ident">BackgroundRGB</span></span>
-<span>(</span><span>red: int, green: int, blue: int)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This class allows you to make attributes for custom background colours using RGB values.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>red</code></strong></dt>
-<dd>The red value of the colour (0-255).</dd>
-<dt><strong><code>green</code></strong></dt>
-<dd>The green value of the colour (0-255).</dd>
-<dt><strong><code>blue</code></strong></dt>
-<dd>The blue value of the colour (0-255).</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>If the red, green or blue values are not between 0 and 255.</dd>
-</dl></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>constyle._BaseRGB</li>
-<li><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></b></code>:
-<ul class="hlist">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="constyle.Foreground8Bit"><code class="flex name class">
-<span>class <span class="ident">Foreground8Bit</span></span>
-<span>(</span><span>value: int)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This class allows you to make attributes for custom foreground colours using 8-bit values.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>value</code></strong></dt>
-<dd>The 8-bit value of the colour (0 to 255).</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>If the 8-bit value is not between 0 and 255.</dd>
-</dl></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>constyle._Base8Bit</li>
-<li><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></b></code>:
-<ul class="hlist">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="constyle.ForegroundRGB"><code class="flex name class">
-<span>class <span class="ident">ForegroundRGB</span></span>
-<span>(</span><span>red: int, green: int, blue: int)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This class allows you to make attributes for custom foreground colours using RGB values.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>red</code></strong></dt>
-<dd>The red value of the colour (0-255).</dd>
-<dt><strong><code>green</code></strong></dt>
-<dd>The green value of the colour (0-255).</dd>
-<dt><strong><code>blue</code></strong></dt>
-<dd>The blue value of the colour (0-255).</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>If the red, green or blue values are not between 0 and 255.</dd>
-</dl></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>constyle._BaseRGB</li>
-<li><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></b></code>:
-<ul class="hlist">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
-</ul>
 </dd>
 <dt id="constyle.Style"><code class="flex name class">
 <span>class <span class="ident">Style</span></span>
-<span>(</span><span>*attrs: <a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a>)</span>
+<span>(</span><span>*attrs: Union[<a title="constyle.Style" href="#constyle.Style">Style</a>, int], end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A collection of attributes which can be used to style a string.</p>
-<p>You can add <code><a title="constyle.Style" href="#constyle.Style">Style</a></code>s together to create a style with all their attributes combined. You can also add a single <code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code> to a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code>.</p>
+<div class="desc"><p>A collection of attributes defining the style of a string.</p>
+<p>You can add <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects together to create a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> with all their attributes combined.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>*attrs</code></strong></dt>
-<dd>The attributes to apply.</dd>
+<dd>The attributes to apply. Can be a mix of <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects or <code>int</code>s.</dd>
+<dt><strong><code>end</code></strong></dt>
+<dd>The style to apply after each styled string. If None (the default) it will reset all attributes.</dd>
 </dl></div>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li>constyle._attributes.Attributes</li>
+<li><a title="constyle.custom_colours.EightBit" href="custom_colours.html#constyle.custom_colours.EightBit">EightBit</a></li>
+<li><a title="constyle.custom_colours.RGB" href="custom_colours.html#constyle.custom_colours.RGB">RGB</a></li>
+</ul>
 </dd>
 </dl>
 </section>
@@ -717,6 +582,11 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 </ul>
 </div>
 <ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="constyle.custom_colours" href="custom_colours.html">constyle.custom_colours</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="constyle.style" href="#constyle.style">style</a></code></li>
@@ -724,12 +594,6 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
-<li>
-<h4><code><a title="constyle.Attribute" href="#constyle.Attribute">Attribute</a></code></h4>
-<ul class="">
-<li><code><a title="constyle.Attribute.ansi" href="#constyle.Attribute.ansi">ansi</a></code></li>
-</ul>
-</li>
 <li>
 <h4><code><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></code></h4>
 <ul class="">
@@ -781,11 +645,14 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <li><code><a title="constyle.Attributes.LEFT_LINE" href="#constyle.Attributes.LEFT_LINE">LEFT_LINE</a></code></li>
 <li><code><a title="constyle.Attributes.MAGENTA" href="#constyle.Attributes.MAGENTA">MAGENTA</a></code></li>
 <li><code><a title="constyle.Attributes.NORMAL" href="#constyle.Attributes.NORMAL">NORMAL</a></code></li>
+<li><code><a title="constyle.Attributes.NO_BACKGROUND" href="#constyle.Attributes.NO_BACKGROUND">NO_BACKGROUND</a></code></li>
 <li><code><a title="constyle.Attributes.NO_BLINK" href="#constyle.Attributes.NO_BLINK">NO_BLINK</a></code></li>
 <li><code><a title="constyle.Attributes.NO_BOLD" href="#constyle.Attributes.NO_BOLD">NO_BOLD</a></code></li>
 <li><code><a title="constyle.Attributes.NO_BOLD_FEINT" href="#constyle.Attributes.NO_BOLD_FEINT">NO_BOLD_FEINT</a></code></li>
+<li><code><a title="constyle.Attributes.NO_COLOUR" href="#constyle.Attributes.NO_COLOUR">NO_COLOUR</a></code></li>
 <li><code><a title="constyle.Attributes.NO_CONCEAL" href="#constyle.Attributes.NO_CONCEAL">NO_CONCEAL</a></code></li>
 <li><code><a title="constyle.Attributes.NO_CROSSED" href="#constyle.Attributes.NO_CROSSED">NO_CROSSED</a></code></li>
+<li><code><a title="constyle.Attributes.NO_FOREGROUND" href="#constyle.Attributes.NO_FOREGROUND">NO_FOREGROUND</a></code></li>
 <li><code><a title="constyle.Attributes.NO_FRAMED_ENCIRCLED" href="#constyle.Attributes.NO_FRAMED_ENCIRCLED">NO_FRAMED_ENCIRCLED</a></code></li>
 <li><code><a title="constyle.Attributes.NO_HIDE" href="#constyle.Attributes.NO_HIDE">NO_HIDE</a></code></li>
 <li><code><a title="constyle.Attributes.NO_IDEOGRAM" href="#constyle.Attributes.NO_IDEOGRAM">NO_IDEOGRAM</a></code></li>
@@ -830,18 +697,6 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <li><code><a title="constyle.Attributes.WHITE" href="#constyle.Attributes.WHITE">WHITE</a></code></li>
 <li><code><a title="constyle.Attributes.YELLOW" href="#constyle.Attributes.YELLOW">YELLOW</a></code></li>
 </ul>
-</li>
-<li>
-<h4><code><a title="constyle.Background8Bit" href="#constyle.Background8Bit">Background8Bit</a></code></h4>
-</li>
-<li>
-<h4><code><a title="constyle.BackgroundRGB" href="#constyle.BackgroundRGB">BackgroundRGB</a></code></h4>
-</li>
-<li>
-<h4><code><a title="constyle.Foreground8Bit" href="#constyle.Foreground8Bit">Foreground8Bit</a></code></h4>
-</li>
-<li>
-<h4><code><a title="constyle.ForegroundRGB" href="#constyle.ForegroundRGB">ForegroundRGB</a></code></h4>
 </li>
 <li>
 <h4><code><a title="constyle.Style" href="#constyle.Style">Style</a></code></h4>
