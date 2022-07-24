@@ -25,7 +25,7 @@ A Python library to add style to your console …" />
 <section id="section-intro">
 <h1 id="constyle">constyle</h1>
 <p>A Python library to add style to your console.</p>
-<p>The name of the library comes from merging the words <strong>CONSoLE</strong> and <strong>STYLE</strong>.</p>
+<p>The name of the library comes from merging the words <strong>CONSoLE</strong> and <strong>STYLE</strong>. Also "con" means "with" in Spanish.</p>
 <h2 id="installation">Installation</h2>
 <p>You can install this package with pip or conda.</p>
 <pre><code class="language-sh">$ pip install constyle
@@ -35,6 +35,7 @@ A Python library to add style to your console …" />
 <h2 id="links">Links</h2>
 <p>The full documentation is available <a href="https://abrahammurciano.github.io/python-constyle/constyle">here</a>.</p>
 <p>The source code is available <a href="https://github.com/abrahammurciano/python-constyle">here</a>.</p>
+<p>Join the support Discord server <a href="https://discord.gg/nUmsrhNDSs">here</a>.</p>
 <h2 id="usage">Usage</h2>
 <p>There are a couple of ways to use this library.</p>
 <h3 id="the-style-function">The <code><a title="constyle.style" href="#constyle.style">style()</a></code> function</h3>
@@ -43,48 +44,51 @@ A Python library to add style to your console …" />
 
 print(style('Hello World', Attributes.GREEN, Attributes.BOLD, Attributes.ON_BLUE))
 </code></pre>
-<h3 id="attribute-objects"><code>Attribute</code> objects</h3>
-<p><code>Attribute</code> objects are all callable, and calling them will apply their style to the given input string.</p>
-<pre><code class="language-py">from constyle import Attributes
-
-underline = Attributes.UNDERLINE
-print(underline(&quot;You wanna experience true level? Do you?&quot;))
-</code></pre>
 <h3 id="style-objects"><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects</h3>
-<p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style with several attributes. <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
-<p>Adding together <code>Attribute</code> objects will also create <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, as will adding <code>Attribute</code>s to existing <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects.</p>
-<pre><code class="language-py">from constyle import Style, Attributes
-
-warning = Style(Attributes.YELLOW, Attributes.BOLD)
-whisper = Attributes.GREY + Attributes.DIM + Attributes.SUPERSCRIPT
-
+<p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style with any number of attributes.</p>
+<h4 id="calling-a-style-object">Calling a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> object</h4>
+<p><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
+<pre><code class="language-py">warning = Style(Attributes.YELLOW, Attributes.BOLD)
 print(warning('You shall not pass!'))
+</code></pre>
+<h4 id="adding-style-objects">Adding <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects</h4>
+<p>Adding together <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects will also create <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects.</p>
+<pre><code class="language-py">whisper = Attributes.GREY + Attributes.DIM + Attributes.SUPERSCRIPT
 print(whisper('Fly you fools'))
+</code></pre>
+<h4 id="converting-style-objects-to-strings">Converting <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to strings</h4>
+<p><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects can be converted to strings to obtain the ANSI escape sequence for that style.</p>
+<pre><code class="language-py">warning = Style(Attributes.YELLOW, Attributes.BOLD)
+print(f&quot;{warning}You shall not pass!{Attributes.RESET}&quot;)
 </code></pre>
 <h3 id="attributes">Attributes</h3>
 <p>The <code><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></code> enum contains all the available ANSI attributes. You can read more about them <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters">here</a>.</p>
-<p>You'll find there is limited support for all the ANSI attributes among consoles.</p>
-<p>If you need more attributes than the ones provided in this enum, you can create your own by using the <code>Attribute</code> class.</p>
+<p><code><a title="constyle.Attributes" href="#constyle.Attributes">Attributes</a></code> are also <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, and as such, as demonstrated above, they too can be called to style a string, added together and to other <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects, and converted to strings to obtain their ANSI sequence.</p>
+<p>You'll find there is limited support for all the ANSI attributes among some consoles.</p>
+<p>If you find more attributes that aren't provided in this enum, you can create your own by constructing a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> with an integer.</p>
 <h3 id="nesting">Nesting</h3>
-<p>Nesting strings is not supported. The inner string will cause the rest of the outer string to lose its formatting.</p>
-<blockquote>
-<p>NOTE: I would like to implement a fix for this in future, but I am uncertain if it is even possible, let alone feasible. If you have any suggestions, feel free to open an issue.</p>
-</blockquote>
-<pre><code class="language-py">from constyle import Attributes
-
-bold = Attributes.BOLD
+<p>In order to nest styles, you can use the <code>end=</code> keyword argument of the <code><a title="constyle.style" href="#constyle.style">style()</a></code> function or the <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> class. Usually when applying a style, the <code>RESET</code> attribute is appended to the end. This can be undesirable when nesting (see the example below).</p>
+<pre><code class="language-py">bold = Attributes.BOLD
 yellow = Attributes.YELLOW
 green = Attributes.GREEN
 
 print(yellow(bold('This is bold and yellow')))
 print(green(f&quot;This is green. {yellow('This is yellow.')} This is no longer green&quot;))
 </code></pre>
-<h3 id="rgb-and-8-bit-colours">RGB and 8-bit colours</h3>
-<p>You can create an attribute for whichever colour you want with the classes <code>ForegroundRGB</code>, <code>BackgroundRGB</code> and <code>Foreground8Bit</code> and <code>Background8Bit</code>. For example:</p>
-<pre><code class="language-py">from constyle import ForegroundRGB, style
-
-print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
+<p>In order to achieve the desired result in the above example, you would have to use the <code>end=</code> keyword argument of the <code><a title="constyle.style" href="#constyle.style">style()</a></code> function. You can pass any <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> to <code>end</code>.</p>
+<pre><code class="language-py">print(green(f&quot;This is green. {bold('This is green and bold.', end=Attributes.NO_BOLD)} This is still green but not bold anymore&quot;))
+print(green(f&quot;This is green. {yellow('This is yellow.', end=green)} This is now green again&quot;))
 </code></pre>
+<h3 id="custom-colours">Custom colours</h3>
+<p>The <code><a title="constyle.custom_colours" href="custom_colours.html">constyle.custom_colours</a></code> module contains a few classes that can be used to create custom colours.</p>
+<h4 id="rgb-colours">RGB colours</h4>
+<p>You can create a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> for a custom RGB colour by using the <code>RGB</code> class. This is not well supported by all consoles.</p>
+<pre><code class="language-py">from constyle.custom_colours import RGB
+
+print(style('This is pink', RGB(255, 192, 203)))
+</code></pre>
+<h4 id="8-bit-colours">8-bit colours</h4>
+<p>Some consoles support 8-bit colours. You can create a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> for an 8-bit colour by using the <code>EightBit</code> class, passing a single integer to it, or you can use the <code>EightBitRGB</code> class to create an 8-bit colour style as close to the RGB values as possible.</p>
 <h3 id="the-command-line-interface">The command line interface</h3>
 <p>This package also provides a very basic command line interface to print styled strings.</p>
 <p>Use <code>constyle --help</code> to see how to use it.</p>
@@ -569,11 +573,19 @@ print(style(&quot;This is a pink string&quot;, ForegroundRGB(255, 128, 255)))
 <li><a href="#links">Links</a></li>
 <li><a href="#usage">Usage</a><ul>
 <li><a href="#the-style-function">The style function</a></li>
-<li><a href="#attribute-objects">Attribute objects</a></li>
-<li><a href="#style-objects">Style objects</a></li>
+<li><a href="#style-objects">Style objects</a><ul>
+<li><a href="#calling-a-style-object">Calling a Style object</a></li>
+<li><a href="#adding-style-objects">Adding Style objects</a></li>
+<li><a href="#converting-style-objects-to-strings">Converting Style objects to strings</a></li>
+</ul>
+</li>
 <li><a href="#attributes">Attributes</a></li>
 <li><a href="#nesting">Nesting</a></li>
-<li><a href="#rgb-and-8-bit-colours">RGB and 8-bit colours</a></li>
+<li><a href="#custom-colours">Custom colours</a><ul>
+<li><a href="#rgb-colours">RGB colours</a></li>
+<li><a href="#8-bit-colours">8-bit colours</a></li>
+</ul>
+</li>
 <li><a href="#the-command-line-interface">The command line interface</a></li>
 </ul>
 </li>
