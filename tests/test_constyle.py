@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import re
+from tkinter import UNDERLINE
 from typing import Callable, List, Pattern, Union
 from constyle import style, Style, Attributes
 import pytest
@@ -58,3 +59,11 @@ def test_style_function(test_case: TestCase, method: Callable[[str, List[Style]]
             assert expected == actual
         else:
             assert expected.match(actual)
+
+
+def test_add() -> None:
+    assert (
+        Attributes.BOLD + Style(Attributes.ITALIC, Attributes.RED)
+        == Style(Attributes.BOLD, Attributes.ITALIC, Attributes.RED)
+        == Attributes.BOLD + Attributes.ITALIC + Attributes.RED
+    )

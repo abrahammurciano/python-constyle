@@ -5,7 +5,23 @@ from typing import Optional, Tuple, Union
 class Style:
     """A collection of attributes defining the style of a string.
 
+    You can call `Style` objects to apply the style to a string.
+    ```py
+    >>> warning = Style(Attributes.BOLD, Attributes.YELLOW, Attributes.ITALIC)
+    >>> print(warning("This is a warning!"))
+    ```
+
     You can add `Style` objects together to create a `Style` with all their attributes combined.
+    ```py
+    >>> warning = Style(Attributes.YELLOW, Attributes.ITALIC)
+    >>> error = warning + Attributes.BOLD + Attributes.ON_RED
+    >>> print(error("This is an error!"))
+    ```
+
+    You can also convert a `Style` object to a string to get the ANSI escape sequence for the style.
+    ```py
+    >>> print(f"{Attributes.YELLOW + Attributes.ITALIC + Attributes.BOLD}This is a warning!{Attributes.RESET}")
+    ```
 
     Args:
         *attrs: The attributes to apply. Can be a mix of `Style` objects or `int`s.
@@ -47,6 +63,13 @@ class Style:
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}({', '.join(str(p) for p in self._params)})"
+
+    def __eq__(self, __o: object) -> bool:
+        return (
+            isinstance(__o, Style)
+            and self._params == __o._params
+            and self._end == __o._end
+        )
 
 
 def style(string: str, *attrs: "Style", end: "Optional[Style]" = None) -> str:
