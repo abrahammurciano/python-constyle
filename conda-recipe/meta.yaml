@@ -18,8 +18,6 @@ requirements:
 build:
   script: "{{ PYTHON }} -m pip install --no-deps --ignore-installed ."
   noarch: python
-  entry_points:
-    - constyle = constyle.__main__:main
 
 about:
   home: https://github.com/abrahammurciano/python-constyle
