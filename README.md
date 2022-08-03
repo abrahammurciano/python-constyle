@@ -113,3 +113,9 @@ print(style('This is pink', RGB(255, 192, 203)))
 #### 8-bit colours
 
 Some consoles support 8-bit colours. You can create a `Style` for an 8-bit colour by using the `EightBit` class, passing a single integer to it, or you can use the `EightBitRGB` class to create an 8-bit colour style as close to the RGB values as possible.
+
+## The command line interface
+
+This package also provides a very basic command line interface to print styled strings.
+
+Use `constyle --help` to see how to use it.
