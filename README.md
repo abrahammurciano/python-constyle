@@ -134,8 +134,9 @@ $ constyle Hello World! -a green -a bold -a on_white
 Or if you're writing a shell script you can make an alias or a function to reuse a certain style.
 
 ```sh
-$ alias error="constyle --attribute bold --attribute red" # With an alias
-$ warn() { constyle $@ -a bold -a yellow } # With a function
-$ error You shall not pass!
-$ warn Fly you fools!
+#!/bin/bash
+alias error="constyle --attribute bold --attribute red" # With an alias
+warn() { constyle $@ -a bold -a yellow } # With a function
+error You shall not pass!
+warn Fly you fools!
 ```
