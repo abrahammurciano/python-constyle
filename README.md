@@ -10,6 +10,9 @@ You can install this package with pip or conda.
 $ pip install constyle
 ```
 ```sh
+$ conda install -c conda-forge constyle
+```
+```sh
 $ conda install -c abrahammurciano constyle
 ```
 
