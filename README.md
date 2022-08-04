@@ -121,4 +121,21 @@ Some consoles support 8-bit colours. You can create a `Style` for an 8-bit colou
 
 This package also provides a very basic command line interface to print styled strings.
 
-Use `constyle --help` to see how to use it.
+You can pass it any number of strings and it will print them all together (like `echo`). You can pass `--attribute` (or `-a`) with the name of an attribute to apply to the other strings being printed. You can pass `--attribute` as many times as you like.
+
+You can use `constyle --help` to see more specific details, as well as all available attributes.
+
+For example you can use `constyle` from your shell to print some styled text.
+
+```sh
+$ constyle Hello World! -a green -a bold -a on_white
+```
+
+Or if you're writing a shell script you can make an alias or a function to reuse a certain style.
+
+```sh
+$ alias error="constyle --attribute bold --attribute red" # With an alias
+$ warn() { constyle $@ -a bold -a yellow } # With a function
+$ error You shall not pass!
+$ warn Fly you fools!
+```
