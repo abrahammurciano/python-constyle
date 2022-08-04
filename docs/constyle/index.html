@@ -30,6 +30,8 @@ A Python library to add style to your console …" />
 <p>You can install this package with pip or conda.</p>
 <pre><code class="language-sh">$ pip install constyle
 </code></pre>
+<pre><code class="language-sh">$ conda install -c conda-forge constyle
+</code></pre>
 <pre><code class="language-sh">$ conda install -c abrahammurciano constyle
 </code></pre>
 <h2 id="links">Links</h2>
@@ -91,7 +93,18 @@ print(style('This is pink', RGB(255, 192, 203)))
 <p>Some consoles support 8-bit colours. You can create a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> for an 8-bit colour by using the <code>EightBit</code> class, passing a single integer to it, or you can use the <code>EightBitRGB</code> class to create an 8-bit colour style as close to the RGB values as possible.</p>
 <h2 id="the-command-line-interface">The command line interface</h2>
 <p>This package also provides a very basic command line interface to print styled strings.</p>
-<p>Use <code>constyle --help</code> to see how to use it.</p>
+<p>You can pass it any number of strings and it will print them all together (like <code>echo</code>). You can pass <code>--attribute</code> (or <code>-a</code>) with the name of an attribute to apply to the other strings being printed. You can pass <code>--attribute</code> as many times as you like.</p>
+<p>You can use <code>constyle --help</code> to see more specific details, as well as all available attributes.</p>
+<p>For example you can use <code><a title="constyle" href="#constyle">constyle</a></code> from your shell to print some styled text.</p>
+<pre><code class="language-sh">$ constyle Hello World! -a green -a bold -a on_white
+</code></pre>
+<p>Or if you're writing a shell script you can make an alias or a function to reuse a certain style.</p>
+<pre><code class="language-sh">#!/bin/bash
+alias error=&quot;constyle --attribute bold --attribute red&quot; # With an alias
+warn() { constyle $@ -a bold -a yellow } # With a function
+error You shall not pass!
+warn Fly you fools!
+</code></pre>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -256,7 +269,7 @@ print(style('This is pink', RGB(255, 192, 203)))
 </dd>
 <dt id="constyle.Attributes.DOUBE_UNDERLINE"><code class="name">var <span class="ident">DOUBE_UNDERLINE</span></code></dt>
 <dd>
-<div class="desc"><p>Double underline. Rarely supported.</p></div>
+<div class="desc"><p>Double underline. Rarely supported. Sometimes implemented as not bold.</p></div>
 </dd>
 <dt id="constyle.Attributes.ENCIRCLED"><code class="name">var <span class="ident">ENCIRCLED</span></code></dt>
 <dd>
@@ -316,7 +329,7 @@ print(style('This is pink', RGB(255, 192, 203)))
 </dd>
 <dt id="constyle.Attributes.ITALIC"><code class="name">var <span class="ident">ITALIC</span></code></dt>
 <dd>
-<div class="desc"><p>Italic text. Not widely supported. Sometimes treated as inverse or blink.</p></div>
+<div class="desc"><p>Italic text. Not widely supported. Sometimes implemented as inverse or blink.</p></div>
 </dd>
 <dt id="constyle.Attributes.LEFT_DOUBLE_LINE"><code class="name">var <span class="ident">LEFT_DOUBLE_LINE</span></code></dt>
 <dd>
@@ -344,7 +357,7 @@ print(style('This is pink', RGB(255, 192, 203)))
 </dd>
 <dt id="constyle.Attributes.NO_BOLD"><code class="name">var <span class="ident">NO_BOLD</span></code></dt>
 <dd>
-<div class="desc"><p>Not bold text</p></div>
+<div class="desc"><p>Not bold text. Sometimes implemented as double underline.</p></div>
 </dd>
 <dt id="constyle.Attributes.NO_BOLD_FEINT"><code class="name">var <span class="ident">NO_BOLD_FEINT</span></code></dt>
 <dd>
