@@ -96,7 +96,7 @@ class Attributes(Style, Enum):
     BOLD = 1
     """Bold text"""
     NO_BOLD = 21
-    """Not bold text"""
+    """Not bold text. Sometimes implemented as double underline."""
     FAINT = 2
     """Faint text (same as DIM). May be implemented as a lighter colour or as a thinner font."""
     DIM = 2
@@ -104,7 +104,7 @@ class Attributes(Style, Enum):
     NO_BOLD_FEINT = 22
     """Neither bold nor faint text"""
     ITALIC = 3
-    """Italic text. Not widely supported. Sometimes treated as inverse or blink."""
+    """Italic text. Not widely supported. Sometimes implemented as inverse or blink."""
     NO_ITALIC_BLACKLETTER = 23
     """Neither italic nor blackletter text"""
     SLOW_BLINK = 5
@@ -134,7 +134,7 @@ class Attributes(Style, Enum):
     NO_UNDERLINE = 24
     """Unset underline"""
     DOUBE_UNDERLINE = 21
-    """Double underline. Rarely supported."""
+    """Double underline. Rarely supported. Sometimes implemented as not bold."""
     DEFAULT_UNDERLINE_COLOUR = 59
     """Set the underline colour to the default. Not in standard; implemented in Kitty, VTE, mintty, and iTerm2."""
     OVERLINE = 53
