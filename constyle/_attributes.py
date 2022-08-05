@@ -1,7 +1,9 @@
 from enum import Enum
 from ._style import Style
+from attributes_doc import attributes_doc
 
 
+@attributes_doc
 class Attributes(Style, Enum):
     """
     This enum contains almost all ANSI sequences known to man.
@@ -12,7 +14,7 @@ class Attributes(Style, Enum):
     """
 
     RESET = 0
-    """Remove all formatting (same as NORMAL)"""
+    # """Remove all formatting (same as NORMAL)"""
     NORMAL = 0
     """Remove all formatting (same as RESET)"""
     BLACK = 30
