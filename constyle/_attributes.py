@@ -14,7 +14,7 @@ class Attributes(Style, Enum):
     """
 
     RESET = 0
-    # """Remove all formatting (same as NORMAL)"""
+    """Remove all formatting (same as NORMAL)"""
     NORMAL = 0
     """Remove all formatting (same as RESET)"""
     BLACK = 30
