@@ -1,5 +1,6 @@
 import argparse
 from typing import Iterable, List, Optional, Tuple
+from attributes_doc import get_doc
 from . import Attributes, style, Style
 
 
@@ -7,11 +8,11 @@ def _available_attrs_help() -> str:
     valid_attrs = (
         (
             "\n\n"
-            f" - {attr(attr.name.lower())}\n"
-            f"     {getattr(attr, f'__doc_{attr.name}__')}"
+            f" - {attr(name.lower())}\n"
+            f"     {get_doc(Attributes, name)}"
         )
-        for attr in sorted(Attributes.__members__.values(), key=lambda a: a.value)
-        if not attr.name.startswith("_") and attr.name.upper() == attr.name
+        for name, attr in sorted(Attributes.__members__.items(), key=lambda a: a[1].value)
+        if not name.startswith("_") and name.upper() == name
     )
     return f"Valid attributes (case insensitive) are:{''.join(valid_attrs)}"
 
