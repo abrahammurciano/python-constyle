@@ -14,7 +14,7 @@ requirements:
   run:
     - python >=3.7
     - importlib-metadata >=4.11.0,<5.0.0a
-    - attributes-doc >= 0.3.0
+    - attributes-doc >=0.3.0
 
 build:
   script: "{{ PYTHON }} -m pip install --no-deps --ignore-installed ."
