@@ -6,12 +6,10 @@ from . import Attributes, style, Style
 
 def _available_attrs_help() -> str:
     valid_attrs = (
-        (
-            "\n\n"
-            f" - {attr(name.lower())}\n"
-            f"     {get_doc(Attributes, name)}"
+        ("\n\n" f" - {attr(name.lower())}\n" f"     {get_doc(Attributes, name)}")
+        for name, attr in sorted(
+            Attributes.__members__.items(), key=lambda a: a[1].value
         )
-        for name, attr in sorted(Attributes.__members__.items(), key=lambda a: a[1].value)
         if not name.startswith("_") and name.upper() == name
     )
     return f"Valid attributes (case insensitive) are:{''.join(valid_attrs)}"
