@@ -1,7 +1,9 @@
 from enum import Enum
 from ._style import Style
+from attributes_doc import attributes_doc
 
 
+@attributes_doc
 class Attributes(Style, Enum):
     """
     This enum contains almost all ANSI sequences known to man.

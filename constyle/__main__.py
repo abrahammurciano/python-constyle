@@ -1,66 +1,29 @@
 import argparse
-import ast
-import inspect
-from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Iterable, List, Optional, Tuple
+from attributes_doc import get_doc
 from . import Attributes, style, Style
 
 
-class _AttributesDocs(ast.NodeVisitor):
-    def __init__(self):
-        self.docs: Dict[str, Optional[str]] = {}
-
-    def visit_ClassDef(self, node: ast.ClassDef):
-        if node.name == "Attributes":
-            self._set_enum_docs(node.body)
-
-    def _set_enum_docs(self, statements: Sequence[ast.stmt]):
-        for doc, names in (
-            (_get_doc(statements, i + 1), _get_names(s))
-            for i, s in enumerate(statements)
-            if isinstance(s, ast.Assign)
-        ):
-            self.docs.update({name: doc for name in names})
-
-
-def _get_doc(statements: Sequence[ast.stmt], index: int) -> Optional[str]:
-    try:
-        stmt = statements[index]
-        assert isinstance(stmt, ast.Expr)
-        assert isinstance(stmt.value, ast.Constant)
-        assert isinstance(stmt.value.value, str)
-        return stmt.value.value
-    except (IndexError, AssertionError):
-        return None
-
-
-def _get_names(assignment: ast.Assign) -> Iterable[str]:
-    return (target.id for target in assignment.targets if isinstance(target, ast.Name))
-
-
 def _available_attrs_help() -> str:
-    _attrs_docs = _AttributesDocs()
-    with Path(inspect.getfile(Attributes)).open() as f:
-        _attrs_docs.visit(ast.parse(f.read()))
-    docs = {
-        k: v
-        for k, v in _attrs_docs.docs.items()
-        if not k.startswith("_") and k.upper() == k
-    }
     valid_attrs = (
-        f"\n\n - {Attributes[name](name.lower())}\n{' ' * 5}{docs[name] or '[missing documentation]'}"
-        for name in sorted(docs, key=lambda n: Attributes[n].value)
+        (
+            "\n\n"
+            f" - {attr(name.lower())}\n"
+            f"     {get_doc(Attributes, name)}"
+        )
+        for name, attr in sorted(Attributes.__members__.items(), key=lambda a: a[1].value)
+        if not name.startswith("_") and name.upper() == name
     )
     return f"Valid attributes (case insensitive) are:{''.join(valid_attrs)}"
 
 
-def _valid_attr(attr: str) -> Attributes:
-    attr = attr.upper().replace("-", "_").replace(" ", "_")
+def _valid_attr(name: str) -> Attributes:
+    name = name.upper().replace("-", "_").replace(" ", "_")
     try:
-        return Attributes[attr]
+        return Attributes[name]
     except KeyError:
         raise argparse.ArgumentTypeError(
-            f"Invalid attribute: {attr}. Use --help to see the available attributes."
+            f"Invalid attribute: {name}. Use --help to see the available attributes."
         )
 
 

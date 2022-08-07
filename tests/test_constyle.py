@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import re
-from tkinter import UNDERLINE
 from typing import Callable, List, Pattern, Union
 from constyle import style, Style, Attributes
 import pytest
@@ -10,7 +9,7 @@ RESET_PATTERN = re.compile(r"\033\[0*m")
 
 
 @dataclass
-class TestCase:
+class TstCase:
     styles: List[Style]
     prefix: Union[str, Pattern]
     suffix: Union[str, Pattern]
@@ -19,15 +18,15 @@ class TestCase:
 @pytest.fixture(
     params=[
         pytest.param(
-            TestCase([], RESET_PATTERN, RESET_PATTERN),
+            TstCase([], RESET_PATTERN, RESET_PATTERN),
             id="NoAttrs",
         ),
         pytest.param(
-            TestCase([Attributes.BOLD], "\033[1m", RESET_PATTERN),
+            TstCase([Attributes.BOLD], "\033[1m", RESET_PATTERN),
             id="OneAttr",
         ),
         pytest.param(
-            TestCase(
+            TstCase(
                 [Attributes.BOLD, Attributes.GREEN],
                 re.compile(r"\033\[1(m\033\[|;)32m"),
                 RESET_PATTERN,
@@ -36,7 +35,7 @@ class TestCase:
         ),
     ]
 )
-def test_case(request) -> TestCase:
+def test_case(request) -> TstCase:
     """The list of attributes to use, the prefix to expect, and the suffix to expect."""
     return request.param
 
@@ -51,7 +50,7 @@ def method(request) -> Callable[[str, List[Style]], str]:
     return request.param
 
 
-def test_style_function(test_case: TestCase, method: Callable[[str, List[Style]], str]):
+def test_style_function(test_case: TstCase, method: Callable[[str, List[Style]], str]):
     styled = method(TEST_STR, test_case.styles)
     prefix, suffix = styled.split(TEST_STR)
     for expected, actual in ((test_case.prefix, prefix), (test_case.suffix, suffix)):
