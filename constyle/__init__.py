@@ -2,20 +2,14 @@
 .. include:: ../README.md
 """
 
-import importlib_metadata
+import sys
 
-try:
-    __version__ = importlib_metadata.version(__package__ or __name__)
-except importlib_metadata.PackageNotFoundError:
-    import toml
+if sys.version_info >= (3, 8):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
 
-    __version__ = (
-        toml.load("pyproject.toml")
-        .get("tool", {})
-        .get("poetry", {})
-        .get("version", "unknown")
-        + "-dev"
-    )
+__version__ = metadata.version(__package__ or __name__)
 
 from ._style import Style, style
 from ._attributes import Attributes

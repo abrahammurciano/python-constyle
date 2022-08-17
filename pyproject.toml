@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "constyle"
-version = "2.0.1"
+# Version is overwritten at build time by CI based on git tag
+version = "0"
 description = "A Python library to add style to your console."
 authors = ["Abraham Murciano <abrahammurciano@gmail.com>"]
 license = "GPLv3"
@@ -20,14 +21,13 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-importlib-metadata = "^4.11.0"
-attributes-doc = "^0.3.0"
+importlib-metadata = ">=4.11.0"
+attributes-doc = ">=0.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
 black = "*"
 pdoc3 = "*"
-toml = "*"
 types-toml = "*"
 mypy = "*"
 

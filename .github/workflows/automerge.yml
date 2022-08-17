@@ -14,5 +14,5 @@ jobs:
         name: automerge
         uses: "pascalgn/automerge-action@v0.15.3"
         env:
-          GITHUB_TOKEN: "${{ github.token }}"
+          GITHUB_TOKEN: "${{ secrets.PERSONAL_GH_TOKEN }}"
           MERGE_METHOD: rebase

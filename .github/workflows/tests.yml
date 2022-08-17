@@ -5,20 +5,14 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - constyle/**
-      - tests/**
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: "! contains(github.event.pull_request.labels.*.name, 'notest')"
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.7
       - name: Get Poetry

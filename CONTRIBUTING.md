@@ -43,3 +43,9 @@ $ black constyle
 ```
 
 If you don't, it will be formatted automatically on merge to main.
+
+# Deployment
+
+To deploy a new version simply create a release on GitHub. The version will be automatically detected from the tag name. It should start with `v` and be followed by the actual version string.
+
+Versions are deployed to PyPI and Anaconda automatically.

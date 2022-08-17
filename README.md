@@ -18,11 +18,15 @@ $ conda install -c abrahammurciano constyle
 
 ## Links
 
-The full documentation is available [here](https://abrahammurciano.github.io/python-constyle/constyle).
+[![Documentation](https://img.shields.io/badge/Documentation-C61C3E?style=for-the-badge&logo=Read+the+Docs&logoColor=%23FFFFFF)](https://<<GITHUB_USERNAME>>.github.io/python-<<PACKAGE_NAME>>/<<PACKAGE_NAME>>)
 
-The source code is available [here](https://github.com/abrahammurciano/python-constyle).
+[![Source Code - GitHub](https://img.shields.io/badge/Source_Code-GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=%23FFFFFF)](https://github.com/<<GITHUB_USERNAME>>/python-<<PACKAGE_NAME>>.git)
 
-Join the support Discord server [here](https://discord.gg/nUmsrhNDSs).
+[![PyPI - <<PACKAGE_NAME>>](https://img.shields.io/badge/PyPI-<<PACKAGE_NAME>>-006DAD?style=for-the-badge&logo=PyPI&logoColor=%23FFD242)](https://pypi.org/project/<<PACKAGE_NAME>>/)
+
+[![Anaconda - <<PACKAGE_NAME>>](https://img.shields.io/badge/Anaconda-<<PACKAGE__NAME>>-44A833?style=for-the-badge&logo=Anaconda&logoColor=%23FFFFFF)](https://anaconda.org/<<ANAONDA_USERNAME>>/<<PACKAGE_NAME>>)
+
+[![Discord - Community](https://img.shields.io/badge/Discord-Community-5865F2?style=for-the-badge&logo=Discord&logoColor=FFFFFF)](https://discord.gg/nUmsrhNDSs)
 
 ## Usage
 
