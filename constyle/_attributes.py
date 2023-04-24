@@ -1,6 +1,8 @@
 from enum import Enum
-from ._style import Style
+
 from attributes_doc import attributes_doc
+
+from ._style import Style
 
 
 @attributes_doc
@@ -211,6 +213,9 @@ class Attributes(Style, Enum):
     """Encircled text. Implemented as "emoji variation selector" in mintty."""
     NO_FRAMED_ENCIRCLED = 54
     """Unset framed/encircled text"""
+
+    def __str__(self) -> str:
+        return super().__str__()
 
     def __repr__(self) -> str:
         return self.name

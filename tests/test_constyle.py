@@ -1,8 +1,10 @@
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 from typing import Callable, List, Pattern, Union
-from constyle import style, Style, Attributes
+
 import pytest
+
+from constyle import Attributes, Style, style
 
 TEST_STR = "Hello World"
 RESET_PATTERN = re.compile(r"\033\[0*m")
@@ -66,3 +68,7 @@ def test_add() -> None:
         == Style(Attributes.BOLD, Attributes.ITALIC, Attributes.RED)
         == Attributes.BOLD + Attributes.ITALIC + Attributes.RED
     )
+
+
+def test_attribute_call() -> None:
+    assert Attributes.BOLD("Hello World") == style("Hello World", Attributes.BOLD)
