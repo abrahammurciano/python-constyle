@@ -51,7 +51,7 @@ print(style('Hello World', Attributes.GREEN, Attributes.BOLD, Attributes.ON_BLUE
 <h3 id="style-objects"><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects</h3>
 <p>You can also use <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects to create a reusable style with any number of attributes.</p>
 <h4 id="calling-a-style-object">Calling a <code><a title="constyle.Style" href="#constyle.Style">Style</a></code> object</h4>
-<p><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input and return a styled string.</p>
+<p><code><a title="constyle.Style" href="#constyle.Style">Style</a></code> objects are callable and take a string as input (or any other object, which will be converted to a string) and return a styled string.</p>
 <pre><code class="language-py">warning = Style(Attributes.YELLOW, Attributes.BOLD)
 print(warning('You shall not pass!'))
 </code></pre>
@@ -123,10 +123,11 @@ warn Fly you fools!
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="constyle.style"><code class="name flex">
-<span>def <span class="ident">style</span></span>(<span>string: str, *attrs: <a title="constyle.Style" href="#constyle.Style">Style</a>, end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None) ‑> str</span>
+<span>def <span class="ident">style</span></span>(<span>string: object, *attrs: <a title="constyle.Style" href="#constyle.Style">Style</a>, end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Apply the given attributes to the given string.</p>
+<p>If the given object isn't a string it will be converted into one.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>string</code></strong></dt>
