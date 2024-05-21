@@ -39,13 +39,15 @@ class Style:
         self._prefix = f"\033[{';'.join(str(p) for p in self._params)}m"
         self._end = end
 
-    def __call__(self, string: str) -> str:
+    def __call__(self, string: object) -> str:
         """Apply this style to the given string.
+
+        If the given object isn't a string it will be converted into one.
 
         Args:
             string: The string to apply the style to.
         """
-        return f"{self}{string}{self._end or Style()}" if string else string
+        return f"{self}{string}{self._end or Style()}" if string != "" else string
 
     def __add__(self, other: "Style") -> "Style":
         """Add the attributes of the left and right `Style` operands, returning a new `Style`.
@@ -72,8 +74,10 @@ class Style:
         )
 
 
-def style(string: str, *attrs: "Style", end: "Optional[Style]" = None) -> str:
+def style(string: object, *attrs: "Style", end: "Optional[Style]" = None) -> str:
     """Apply the given attributes to the given string.
+
+    If the given object isn't a string it will be converted into one.
 
     Args:
         string: The string to style.

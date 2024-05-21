@@ -72,3 +72,7 @@ def test_add() -> None:
 
 def test_attribute_call() -> None:
     assert Attributes.BOLD("Hello World") == style("Hello World", Attributes.BOLD)
+
+
+def test_non_string() -> None:
+    assert style(None, Attributes.BOLD) == style("None", Attributes.BOLD)
