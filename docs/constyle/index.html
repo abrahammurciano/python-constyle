@@ -123,10 +123,11 @@ warn Fly you fools!
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="constyle.style"><code class="name flex">
-<span>def <span class="ident">style</span></span>(<span>string: str, *attrs: <a title="constyle.Style" href="#constyle.Style">Style</a>, end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None) ‑> str</span>
+<span>def <span class="ident">style</span></span>(<span>string: object, *attrs: <a title="constyle.Style" href="#constyle.Style">Style</a>, end: Optional[<a title="constyle.Style" href="#constyle.Style">Style</a>] = None) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Apply the given attributes to the given string.</p>
+<p>If the given object isn't a string it will be converted into one.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>string</code></strong></dt>
