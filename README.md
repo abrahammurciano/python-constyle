@@ -48,7 +48,7 @@ You can also use `Style` objects to create a reusable style with any number of a
 
 #### Calling a `Style` object
 
-`Style` objects are callable and take a string as input and return a styled string.
+`Style` objects are callable and take a string as input (or any other object, which will be converted to a string) and return a styled string.
 
 ```py
 warning = Style(Attributes.YELLOW, Attributes.BOLD)
